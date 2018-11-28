@@ -1,0 +1,85 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Catalog</title>
+</head>
+<body>
+  <font face="verdana">
+<h2>Library Catalog</h2>
+
+<p>Welcome to the library catalog! Here you can...</p>
+
+<hr>
+
+<h4>Create an Account</h4>
+
+<form action="user.php" name="user" method="post">
+  <p>First name: <input type="text" name="firstName"></p>
+  <p>Last name: <input type="text" name="lastName"></p>
+  <p>Email: <input type="text" name="userEmail"></p>
+  <p>Password: <input type="text" name="userPwd"></p>
+
+<input type="submit">
+</form>
+<br>
+
+<hr>
+
+<h4>Search for Books</h4>
+
+    <form action="search.php" name="search" method="post">
+
+    <p>
+    Please enter search term: <input type="text" name="input">
+    <select name='searchTerm'>
+    <option value='title'>Title</option>
+    <option value='author'>Author</option>
+    <option value='genre'>Genre</option>
+    <option value='isbn'>ISBN</option>
+    </select>
+</p>
+
+<input type="submit">
+</form>
+<br>
+
+<hr>
+
+<h4>Reserve a Book</h4>
+
+<form action="reserve.php" name="reserve" method="post">
+  <p>Email: <input type="text" name="reserveEmail"></p>
+  <p>Password: <input type="text" name="reservePwd"></p>
+
+  <p>Please enter the ISBN of the book you would like to reserve: <input type="text" name="reserveISBN"></p>
+  <p><i>Don't know the ISBN of your book? Use the "Search for Books" feature above!</i></p>
+<input type="submit">
+</form>
+<br>
+
+<hr>
+
+<h4>Checkout a Book</h4>
+
+<form action="test.php" name="checkout" method="post">
+  <p>Email: <input type="text" name="checkoutEmail"></p>
+  <p>Password: <input type="text" name="checkoutPwd "></p>
+
+  <p>Please enter the ISBN of the book you would like to checkout: <input type="text" name="checkoutISBN"></p>
+  <p><i>Don't know the ISBN of your book? Use the "Search for Books" feature above!</i></p>
+<input type="submit">
+
+</form>
+<br>
+
+<hr>
+<br>
+<p><i>Thank you for visiting, happy reading!</i></p>
+<br>
+</font>
+</body>
+</html>
