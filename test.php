@@ -12,8 +12,8 @@
     $host     = "yingqing-4750.ctheaw88fxx7.us-east-1.rds.amazonaws.com";
     $port     = 3306;
     $socket   = "";
-    $user     = "mariah";
-    $password = "mariah";
+    $user     = "";
+    $password = "";
     $dbname   = "Library";
 
     //create connection
