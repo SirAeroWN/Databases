@@ -85,7 +85,7 @@
             }
 
             if($reserved == 0){ // for some reason this won't work!
-              echo "Sorry, we were unable to reserve this book. Please check to make sure you have entered a valid ISBN value.";
+              echo "Sorry, we were unable to reserve this book. All copies may already be reserved, also please check to make sure you have entered a valid ISBN value.";
             }
       }
       else {
