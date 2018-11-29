@@ -1,12 +1,11 @@
 <?php
-  header('Content-Type: application/json');
+header('Content-Type: application/json');
 
-  $aResult = array();
+session_start();
 
-  if( isset($_POST['reserveISBN']) && !isset($_POST['reserveEmail']) ) { $aResult['error'] = 'Please enter your email.'; }
-  if( isset($_POST['reserveISBN']) && !isset($_POST['reservePwd']) ) { $aResult['error'] = 'Please enter your password.'; }
+$aResult = array();
 
-  if( !isset($aResult['error']) ) {
+if( !isset($aResult['error']) ) {
 
     //change hardcoded creds if posted online
     /* $host     = "yingqing-4750.ctheaw88fxx7.us-east-1.rds.amazonaws.com"; */
@@ -41,40 +40,34 @@
         if ($result->num_rows > 0) {
             // output data of each row
             $row = $result->fetch_assoc();
-            echo "Book Title: ".$row["title"]."\nAuthor: ".$row["first_name"]." ".$row["last_name"]."\nISBN: ".$row["isbn"]."\nCondition: ".$row["con"]."\n\nHas been reserved![".$row["book_id"]."]\n\n";
-            $reserved = 1;
             $bid = $row["book_id"];
             $sql = "insert into reserves (book_id, patron_id) values({$bid}, {$pid});";
             $result = $conn->query($sql);
-            if ($result != TRUE) { echo "FAILED"; }
+            if ($result != TRUE) {
+                error_log($sql, 0);
+                error_log($result, 0);
+            } else {
+                echo "Book Title: ".$row["title"]."\nAuthor: ".$row["first_name"]." ".$row["last_name"]."\nISBN: ".$row["isbn"]."\nCondition: ".$row["con"]."\n\nHas been reserved![".$row["book_id"]."]\n\n";
+                $reserved = 1;
+                error_log($reserveISBN, 0);
+                $_SESSION['last_reserved'] = $bid;
+            }
         }
         return $reserved;
     }
 
     if ($conn->connect_error) {
-    $aResult['error'] = 'bad connection';
-       //die("Connection failed: " . $conn->connect_error);
+        $aResult['error'] = 'bad connection';
+        //die("Connection failed: " . $conn->connect_error);
 
     }
 
     else{
 
-      /* RESERVE BOOKS */
-      // vuln to sql injection
-      if(isset($_POST['reserveISBN'])){
-        $sql = "SELECT email, pwd, patron_id as pid FROM patron
-        WHERE email='{$_POST['reserveEmail']}' AND pwd='{$_POST['reservePwd']}';";
-        /* fill with query: if email & pwd are correct, set ONE of the
-        available copies to reserved
-        conditions: bad, poor, good, excellent
-        */
-
-        $result = $conn->query($sql);
-
-        if ($result->num_rows > 0) {
-            // output data of each row
-            $pid = $result->fetch_assoc();
-            $pid = $pid["pid"];
+        /* RESERVE BOOKS */
+        // vuln to sql injection
+        if(isset($_POST['reserveISBN'])) {
+            $pid = $_SESSION['pid'];
             $conditions = array('excellent', 'good', 'poor', 'bad');
             $reserved = 0;
             foreach ($conditions as $cond) {
@@ -84,20 +77,16 @@
                 }
             }
 
-            if($reserved == 0){ // for some reason this won't work!
-              echo "Sorry, we were unable to reserve this book. All copies may already be reserved, also please check to make sure you have entered a valid ISBN value.";
+            if($reserved == 0) {
+                echo "Sorry, we were unable to reserve this book. All copies may already be reserved, also please check to make sure you have entered a valid ISBN value.";
             }
-      }
-      else {
-          echo "Incorrect email or password.";
-      }
+        }
 
+        $conn->close();
     }
+}
 
-    $conn->close();
-    }
-  }
-
-    echo json_encode($aResult);
+/* echo json_encode($aResult); */
+header('Location: index.php');
 
 ?>

@@ -43,10 +43,13 @@ if( !isset($aResult['error']) ) {
             $sql = "insert into checked_out (book_id, patron_id, start_date) values({$bid}, {$pid}, now());";
             $result = $conn->query($sql);
             if ($result != TRUE) {
-                echo "FAILED; ".$sql;
+                error_log($sql, 0);
+                error_log($result, 0);
             } else {
                 echo "Book Title: ".$row["title"]."\nAuthor: ".$row["first_name"]." ".$row["last_name"]."\nISBN: ".$row["isbn"]."\nCondition: ".$row["con"]."\n\nHas been checked out![".$row["book_id"]."]\n\n";
                 $reserved = 1;
+                error_log($reserveISBN, 0);
+                $_SESSION['last_checkedout'] = $bid;
             }
         }
         return $reserved;
@@ -82,6 +85,7 @@ if( !isset($aResult['error']) ) {
     }
 }
 
-echo json_encode($aResult);
+/* echo json_encode($aResult); */
+header('Location: index.php');
 
 ?>
