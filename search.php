@@ -71,7 +71,7 @@
         JOIN vendor ON sells.vendor_id = vendor.vendor_id
         JOIN publishes ON isbn_table.isbn = publishes.isbn
         JOIN publisher ON publishes.publisher_id = publisher.publisher_id
-        WHERE last_name = '{$_POST['input']}';";
+        WHERE last_name like '%{$_POST['input']}%';";
 
         $result = $conn->query($sql);
 
@@ -119,7 +119,7 @@
         JOIN vendor ON sells.vendor_id = vendor.vendor_id
         JOIN publishes ON isbn_table.isbn = publishes.isbn
         JOIN publisher ON publishes.publisher_id = publisher.publisher_id
-        WHERE isbn_table.isbn = '{$_POST['input']}';";
+        WHERE isbn_table.isbn like '%{$_POST['input']}%';";
 
         $result = $conn->query($sql);
 
