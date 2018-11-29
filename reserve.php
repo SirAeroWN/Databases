@@ -84,45 +84,6 @@
                 }
             }
 
-/*             if($reserved == 0){ */
-/*                 $reserved = reserve_isbn($pid, $_POST['reserveISBN'], 'good', $conn); */
-/*             } */
-/*             elseif($reserved == 0){ */
-/*               $sql = "SELECT DISTINCT title, first_name, last_name, isbn_table.isbn, con FROM isbn_table */
-/*               JOIN writes ON isbn_table.isbn = writes.isbn */
-/*               JOIN author ON writes.author_id = author.author_id */
-/*               JOIN book ON isbn_table.isbn = book.isbn */
-/*               JOIN sells ON isbn_table.isbn = sells.isbn */
-/*               WHERE isbn_table.isbn = '{$_POST['reserveISBN']}' AND con = 'poor';"; */
-
-/*               $result = $conn->query($sql); */
-
-/*               if ($result->num_rows > 0) { */
-/*                   // output data of each row */
-/*                   while($row = $result->fetch_assoc()) { */
-/*                     echo "Book Title: ".$row["title"]."\nAuthor: ".$row["first_name"]." ".$row["last_name"]."\nISBN: ".$row["isbn"]."\nCondition: ".$row["con"]."\n\nHas been reserved!"; */
-/*                   } */
-/*                   $reserved = 1; */
-/*               } */
-/*             } */
-/*             elseif($reserved == 0){ */
-/*               $sql = "SELECT DISTINCT title, first_name, last_name, isbn_table.isbn, con FROM isbn_table */
-/*               JOIN writes ON isbn_table.isbn = writes.isbn */
-/*               JOIN author ON writes.author_id = author.author_id */
-/*               JOIN book ON isbn_table.isbn = book.isbn */
-/*               JOIN sells ON isbn_table.isbn = sells.isbn */
-/*               WHERE isbn_table.isbn = '{$_POST['reserveISBN']}' AND con = 'bad';"; */
-
-/*               $result = $conn->query($sql); */
-
-/*               if ($result->num_rows > 0) { */
-/*                   // output data of each row */
-/*                   while($row = $result->fetch_assoc()) { */
-/*                     echo "Book Title: ".$row["title"]."\nAuthor: ".$row["first_name"]." ".$row["last_name"]."\nISBN: ".$row["isbn"]."\nCondition: ".$row["con"]."\n\nHas been reserved!"; */
-/*                   } */
-/*                   $reserved = 1; */
-/*               } */
-/*             } */
             if($reserved == 0){ // for some reason this won't work!
               echo "Sorry, we were unable to reserve this book. Please check to make sure you have entered a valid ISBN value.";
             }
