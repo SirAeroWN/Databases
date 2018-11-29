@@ -1,12 +1,11 @@
 <?php
-  header('Content-Type: application/json');
+header('Content-Type: application/json');
 
-  $aResult = array();
+session_start();
 
-  if( isset($_POST['checkoutISBN']) && !isset($_POST['checkoutEmail']) ) { $aResult['error'] = 'Please enter your email.'; }
-  if( isset($_POST['checkoutISBN']) && !isset($_POST['checkoutPwd']) ) { $aResult['error'] = 'Please enter your password.'; }
+$aResult = array();
 
-  if( !isset($aResult['error']) ) {
+if( !isset($aResult['error']) ) {
 
     //change hardcoded creds if posted online
     /* $host     = "yingqing-4750.ctheaw88fxx7.us-east-1.rds.amazonaws.com"; */
@@ -46,36 +45,25 @@
             if ($result != TRUE) {
                 echo "FAILED; ".$sql;
             } else {
-            echo "Book Title: ".$row["title"]."\nAuthor: ".$row["first_name"]." ".$row["last_name"]."\nISBN: ".$row["isbn"]."\nCondition: ".$row["con"]."\n\nHas been checked out![".$row["book_id"]."]\n\n";
-            $reserved = 1;
+                echo "Book Title: ".$row["title"]."\nAuthor: ".$row["first_name"]." ".$row["last_name"]."\nISBN: ".$row["isbn"]."\nCondition: ".$row["con"]."\n\nHas been checked out![".$row["book_id"]."]\n\n";
+                $reserved = 1;
             }
         }
         return $reserved;
     }
 
     if ($conn->connect_error) {
-    $aResult['error'] = 'bad connection';
-       //die("Connection failed: " . $conn->connect_error);
+        $aResult['error'] = 'bad connection';
+        //die("Connection failed: " . $conn->connect_error);
 
     }
 
     else{
 
-      /* CHECKOUT BOOKS */
-      // vuln to sql injection
-      if(isset($_POST['checkoutISBN'])){
-        $sql = "SELECT email, pwd, patron_id as pid FROM patron
-        WHERE email='{$_POST['checkoutEmail']}' AND pwd='{$_POST['checkoutPwd']}';";
-        /* fill with query: if email & pwd are correct, set ONE of the
-        available copies to checked out
-        */
-
-        $result = $conn->query($sql);
-
-        if ($result->num_rows > 0) {
-            // output data of each row
-            $pid = $result->fetch_assoc();
-            $pid = $pid["pid"];
+        /* CHECKOUT BOOKS */
+        // vuln to sql injection
+        if(isset($_POST['checkoutISBN'])){
+            $pid = $_SESSION['pid'];
             $conditions = array('excellent', 'good', 'poor', 'bad');
             $reserved = 0;
             foreach ($conditions as $cond) {
@@ -86,19 +74,14 @@
             }
 
             if($reserved == 0){ // for some reason this won't work!
-              echo "Sorry, all copies of this book are checked out. Feel free to reserve a copy!";
+                echo "Sorry, all copies of this book are checked out. Feel free to reserve a copy!";
             }
-      }
-      else {
-          echo "Incorrect email or password.";
-      }
+        }
 
+        $conn->close();
     }
+}
 
-    $conn->close();
-    }
-  }
-
-    echo json_encode($aResult);
+echo json_encode($aResult);
 
 ?>

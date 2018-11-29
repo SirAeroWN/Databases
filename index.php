@@ -1,3 +1,7 @@
+<?php
+    session_start();
+?>
+
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
@@ -80,13 +84,8 @@
 
 <hr>
 
-<br>
-<p><i>Thank you for visiting, happy reading!</i></p>
-<br>
-</font>
 <!-- show currently checked out books -->
 <?php
-    session_start();
     $pid = $_SESSION['pid'];
 
     $host     = "localhost";
@@ -104,8 +103,61 @@
     $aResult['error'] = 'bad connection';
        //die("Connection failed: " . $conn->connect_error);
 
-    }
+    } else {
+        // show checked out books
+        echo "<h2>Your Checked Out Books</h2>";
 
-    else{
+        $sql = "SELECT distinct isbn_table.isbn, book_id, title, first_name, last_name, dewey, con, publisher.company_name AS company_name FROM isbn_table
+        JOIN writes ON isbn_table.isbn = writes.isbn
+        JOIN author ON writes.author_id = author.author_id
+        JOIN book ON isbn_table.isbn = book.isbn
+        JOIN sells ON isbn_table.isbn = sells.isbn
+        JOIN publishes ON isbn_table.isbn = publishes.isbn
+        JOIN publisher ON publishes.publisher_id = publisher.publisher_id
+        where book_id in (select book_id from checked_out where patron_id = {$pid})
+        group by book_id;";
+
+    
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+          // output data of each row
+          while($row = $result->fetch_assoc()) {
+            echo "<p>"."Book Title: ".$row["title"]."<br>Author: ".$row["first_name"]." ".$row["last_name"]."<br>ISBN: ".$row["isbn"]."<br>Condition: ".$row["con"]."</p>";
+          }
+        } else {
+            echo "<p>You've not checked out any books.</p>";
+        }
+        // show reserved out books
+        echo "<h2>Your Reserved Books</h2>";
+
+        $sql = "SELECT distinct isbn_table.isbn, book_id, title, first_name, last_name, dewey, con, publisher.company_name AS company_name FROM isbn_table
+        JOIN writes ON isbn_table.isbn = writes.isbn
+        JOIN author ON writes.author_id = author.author_id
+        JOIN book ON isbn_table.isbn = book.isbn
+        JOIN sells ON isbn_table.isbn = sells.isbn
+        JOIN publishes ON isbn_table.isbn = publishes.isbn
+        JOIN publisher ON publishes.publisher_id = publisher.publisher_id
+        where book_id in (select book_id from reserves where patron_id = {$pid})
+        group by book_id;";
+
+    
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+          // output data of each row
+          while($row = $result->fetch_assoc()) {
+            echo "<p>"."Book Title: ".$row["title"]."<br>Author: ".$row["first_name"]." ".$row["last_name"]."<br>ISBN: ".$row["isbn"]."<br>Condition: ".$row["con"]."</p>";
+          }
+        } else {
+            echo "<p>You've not reserved any books.</p>";
+        }
+    $conn->close();
+    }
+?>
+<br>
+<p><i>Thank you for visiting, happy reading!</i></p>
+<br>
+</font>
 </body>
 </html>
