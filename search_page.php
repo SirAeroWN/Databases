@@ -31,6 +31,7 @@ session_start();
 
 <input type="submit">
 </form>
+<a href="index.php">Home</a>
 <br>
 
 <hr>
@@ -127,11 +128,11 @@ if( !isset($aResult['error']) ) {
                 while($row = $result->fetch_assoc()) {
                     echo "<p>Book Title: <b>".$row["title"]."</b><br>Author: ".$row["first_name"]." ".$row["last_name"]."<br>ISBN: ".$row["isbn"]."<br>Genre (Dewey value): ".$row["dewey"]."<br>Condition: ".$row["con"]."<br>Publisher: ".$row["company_name"]."<br>Book ID: ".$row['book_id']."</p>";
                     action_forms($row, $pid, $conn);
+                    echo "<hr>";
                 }
             } else {
                 echo "0 results ".$sql;
             }
-            echo "<br>";
         }
 
         // vuln to sql injection
@@ -153,6 +154,7 @@ if( !isset($aResult['error']) ) {
                 while($row = $result->fetch_assoc()) {
                     echo "</p>Book Title: ".$row["title"]."<br>Author: ".$row["first_name"]." ".$row["last_name"]."<br>ISBN: ".$row["isbn"]."<br>Genre (Dewey value): ".$row["dewey"]."<br>Condition: ".$row["con"]."<br>Publisher: ".$row["company_name"]."</p>";
                     action_forms($row, $pid, $conn);
+                    echo "<hr>";
                 }
             }
             else {
@@ -203,6 +205,7 @@ if( !isset($aResult['error']) ) {
                 while($row = $result->fetch_assoc()) {
                     echo "</p>Book Title: ".$row["title"]."<br>Author: ".$row["first_name"]." ".$row["last_name"]."<br>ISBN: ".$row["isbn"]."<br>Genre (Dewey value): ".$row["dewey"]."<br>Condition: ".$row["con"]."<br>Publisher: ".$row["company_name"]."</p>";
                     action_forms($row, $pid, $conn);
+                    echo "<hr>";
                 }
             }
             else {
